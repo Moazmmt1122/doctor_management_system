@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+
+{% block title %}Book Appointment — MediConnect{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center align-items-center mb-5 mt-4" style="min-height: 70vh;" data-aos="fade-up">
+    <div class="col-lg-8">
+        <div class="text-center mb-4">
+            <h2 class="fw-bold"><i class="bi bi-calendar2-plus text-primary me-2"></i> Book Appointment</h2>
+            <p class="text-muted">Schedule your visit with Dr. {{ doctor.user.first_name }} {{ doctor.user.last_name }}</p>
+        </div>
+
+        <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+            <!-- Doctor Info Header -->
+            <div class="card-header border-0 bg-light p-4 d-flex align-items-center gap-3 border-bottom border-light-subtle">
+                <div class="bg-white rounded-circle p-2 shadow-sm d-flex align-items-center justify-content-center overflow-hidden" style="width: 70px; height: 70px;">
+                    {% if doctor.user.profile_image %}
+                        <img src="{{ doctor.user.profile_image.url }}" alt="Profile" class="w-100 h-100 object-fit-cover">
+                    {% else %}
+                        <i class="bi bi-person-fill text-primary opacity-50" style="font-size: 2.5rem;"></i>
+                    {% endif %}
+                </div>
+                <div>
+                    <h5 class="fw-bold mb-1">Dr. {{ doctor.user.first_name }} {{ doctor.user.last_name }}</h5>
+                    <div class="d-flex align-items-center gap-3 text-muted small">
+                        <span><i class="bi bi-briefcase text-primary me-1"></i> {{ doctor.specialization|default:"General Medicine" }}</span>
+                        <span class="border-start ps-3"><i class="bi bi-cash text-success me-1"></i> Rs. {{ doctor.consultation_fee }}</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card-body p-4 p-md-5">
+                <form method="POST">
+                    {% csrf_token %}
+
+                    <div class="row g-4 mb-4">
+                        <div class="col-md-6">
+                            <label for="id_appointment_date" class="form-label text-muted small fw-bold text-uppercase letter-spacing-1">Date</label>
+                            <input type="date" name="appointment_date" id="id_appointment_date" class="form-control p-3 bg-light border-0" required onclick="this.showPicker()">
+                            {% if form.appointment_date.errors %}
+                                <div class="text-danger small mt-1"><i class="bi bi-exclamation-circle me-1"></i>{{ form.appointment_date.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label for="id_time_slot" class="form-label text-muted small fw-bold text-uppercase letter-spacing-1">Selected Time Slot</label>
+                            <input type="text" name="time_slot" id="id_time_slot" class="form-control p-3 bg-light border-0" readonly placeholder="Click a slot below" required>
+                            {% if form.time_slot.errors %}
+                                <div class="text-danger small mt-1"><i class="bi bi-exclamation-circle me-1"></i>{{ form.time_slot.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    {% if doctor.time_slots.all %}
+                    <div class="bg-light rounded-4 p-4 mb-4 border border-light-subtle">
+                        <p class="text-muted small fw-bold text-uppercase mb-3"><i class="bi bi-clock-history me-1"></i> Click to Select Available Slot:</p>
+                        <div class="d-flex flex-wrap gap-2">
+                        {% for slot in doctor.time_slots.all %}
+                            <button type="button" class="btn btn-outline-primary py-2.5 px-3 slot-btn d-flex align-items-center gap-2" style="border-radius: 12px; font-weight: 500;" onclick="selectSlot(this, '{{ slot.start_time|time:\'H:i\' }} - {{ slot.end_time|time:\'H:i\' }}')">
+                                <i class="bi bi-clock"></i> {{ slot.start_time|time:"H:i" }} - {{ slot.end_time|time:"H:i" }}
+                            </button>
+                        {% endfor %}
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="alert alert-warning rounded-4 mb-4 py-3 border-0 small d-flex align-items-center">
+                        <i class="bi bi-exclamation-triangle-fill fs-5 me-2"></i>
+                        This doctor has not added any availability slots yet. Please check back later.
+                    </div>
+                    {% endif %}
+
+                    <div class="mb-5">
+                        <label for="id_reason" class="form-label text-muted small fw-bold text-uppercase letter-spacing-1">Reason for Visit</label>
+                        <textarea name="reason" id="id_reason" class="form-control p-3 bg-light border-0" rows="3" placeholder="Write any specific symptoms or reasons..."></textarea>
+                        {% if form.reason.errors %}
+                            <div class="text-danger small mt-1"><i class="bi bi-exclamation-circle me-1"></i>{{ form.reason.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="d-flex gap-3">
+                        <button type="submit" class="btn btn-success flex-grow-1 py-3 fw-bold rounded-3 shadow" style="font-size: 1.1rem;">
+                            Confirm Appointment
+                        </button>
+                        <a href="{% url 'doctor_detail' doctor.id %}" class="btn btn-light border py-3 px-4 fw-bold rounded-3">Back to Profile</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function selectSlot(button, timeStr) {
+        // Remove active styling from all buttons
+        document.querySelectorAll('.slot-btn').forEach(btn => {
+            btn.classList.remove('btn-primary', 'text-white');
+            btn.classList.add('btn-outline-primary');
+        });
+        
+        // Add active styling to clicked button
+        button.classList.remove('btn-outline-primary');
+        button.classList.add('btn-primary', 'text-white');
+        
+        // Update form input value
+        document.getElementById('id_time_slot').value = timeStr;
+    }
+</script>
+{% endblock %}

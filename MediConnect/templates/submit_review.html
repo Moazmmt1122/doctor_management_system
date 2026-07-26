@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block title %}Review Dr. {{ doctor.user.first_name }} — MediConnect{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center align-items-center mb-5 mt-4" style="min-height: 60vh;">
+    <div class="col-md-8 col-lg-6">
+        <div class="text-center mb-4">
+            <h2 class="fw-bold"><i class="bi bi-star-half text-warning me-2"></i> Share Your Experience</h2>
+            <p class="text-muted">Your feedback helps others find the right care.</p>
+        </div>
+
+        <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+            <div class="card-header border-0 bg-light p-4 d-flex align-items-center justify-content-center gap-3">
+                <div class="bg-white rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                    <i class="bi bi-person-fill text-primary" style="font-size: 1.5rem;"></i>
+                </div>
+                <div class="text-start">
+                    <h6 class="fw-bold mb-0">Dr. {{ doctor.user.first_name }} {{ doctor.user.last_name }}</h6>
+                    <small class="text-muted">{{ doctor.specialization|default:"General Medicine" }}</small>
+                </div>
+            </div>
+            <div class="card-body p-4 p-md-5">
+                <form method="POST">
+                    {% csrf_token %}
+
+                    <div class="mb-4">
+                        <label for="id_rating" class="form-label fw-bold text-muted small text-uppercase letter-spacing-1">Rating</label>
+                        {{ form.rating }}
+                        {% if form.rating.errors %}
+                            <div class="text-danger small mt-1"><i class="bi bi-exclamation-circle me-1"></i>{{ form.rating.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-5">
+                        <label for="id_comment" class="form-label fw-bold text-muted small text-uppercase letter-spacing-1">Your Review</label>
+                        {{ form.comment }}
+                        {% if form.comment.errors %}
+                            <div class="text-danger small mt-1"><i class="bi bi-exclamation-circle me-1"></i>{{ form.comment.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="d-flex gap-3">
+                        <button type="submit" class="btn btn-warning flex-grow-1 py-3 fw-bold rounded-3 shadow-sm">
+                            Publish Review
+                        </button>
+                        <a href="{% url 'doctor_detail' doctor.id %}" class="btn btn-light border py-3 px-4 fw-bold rounded-3">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const selects = document.querySelectorAll('select');
+        const textareas = document.querySelectorAll('textarea');
+        
+        selects.forEach(s => {
+            s.classList.add('form-select', 'p-3', 'bg-light', 'border-0');
+            s.style.borderRadius = '10px';
+        });
+        
+        textareas.forEach(t => {
+            t.classList.add('form-control', 'p-3', 'bg-light', 'border-0');
+            t.style.borderRadius = '10px';
+        });
+    });
+</script>
+{% endblock %}

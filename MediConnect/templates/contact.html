@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+
+{% block title %}Contact Us — MediConnect{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center align-items-center mb-5 mt-4" style="min-height: 70vh;">
+    <div class="col-lg-10">
+        <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+            <div class="row g-0">
+                <!-- Contact Info Side -->
+                <div class="col-md-5 position-relative text-white" style="background: linear-gradient(135deg, #4361ee, #3a0ca3);">
+                    <div class="position-absolute top-0 start-0 w-100 h-100 opacity-25" style="background-image: url('data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'1\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');"></div>
+                    <div class="p-4 p-md-5 position-relative z-1 h-100 d-flex flex-column">
+                        <h3 class="fw-bold mb-4">Get in Touch</h3>
+                        <p class="text-white-50 mb-5">Have questions about our platform or need support? Our team is here to help you.</p>
+                        
+                        <div class="d-flex flex-column gap-4 mt-auto">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="bg-white bg-opacity-25 rounded-circle d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                                    <i class="bi bi-geo-alt-fill fs-5"></i>
+                                </div>
+                                <div>
+                                    <h6 class="mb-1 fw-bold">Address</h6>
+                                    <p class="mb-0 text-white-50 small">123 Health Avenue, Medical District, NY 10001</p>
+                                </div>
+                            </div>
+                            
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="bg-white bg-opacity-25 rounded-circle d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                                    <i class="bi bi-envelope-fill fs-5"></i>
+                                </div>
+                                <div>
+                                    <h6 class="mb-1 fw-bold">Email Us</h6>
+                                    <p class="mb-0 text-white-50 small">support@mediconnect.com</p>
+                                </div>
+                            </div>
+                            
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="bg-white bg-opacity-25 rounded-circle d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                                    <i class="bi bi-telephone-fill fs-5"></i>
+                                </div>
+                                <div>
+                                    <h6 class="mb-1 fw-bold">Call Us</h6>
+                                    <p class="mb-0 text-white-50 small">+1 (555) 123-4567</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Contact Form Side -->
+                <div class="col-md-7 p-4 p-md-5">
+                    <h4 class="fw-bold mb-1">Send us a Message</h4>
+                    <p class="text-muted small mb-4">Fill out the form below and we'll get back to you shortly.</p>
+                    
+                    <form method="POST">
+                        {% csrf_token %}
+                        
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label for="id_name" class="form-label text-muted small fw-bold text-uppercase letter-spacing-1">Your Name</label>
+                                {{ form.name }}
+                                {% if form.name.errors %}
+                                    <div class="text-danger small mt-1"><i class="bi bi-exclamation-circle me-1"></i>{{ form.name.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label for="id_email" class="form-label text-muted small fw-bold text-uppercase letter-spacing-1">Your Email</label>
+                                {{ form.email }}
+                                {% if form.email.errors %}
+                                    <div class="text-danger small mt-1"><i class="bi bi-exclamation-circle me-1"></i>{{ form.email.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="id_subject" class="form-label text-muted small fw-bold text-uppercase letter-spacing-1">Subject</label>
+                            {{ form.subject }}
+                            {% if form.subject.errors %}
+                                <div class="text-danger small mt-1"><i class="bi bi-exclamation-circle me-1"></i>{{ form.subject.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="id_message" class="form-label text-muted small fw-bold text-uppercase letter-spacing-1">Message</label>
+                            {{ form.message }}
+                            {% if form.message.errors %}
+                                <div class="text-danger small mt-1"><i class="bi bi-exclamation-circle me-1"></i>{{ form.message.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100 py-3 fw-bold rounded-3 shadow-sm d-flex justify-content-center align-items-center gap-2">
+                            <span>Send Message</span> <i class="bi bi-send-fill"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const inputs = document.querySelectorAll('input[type="text"], input[type="email"], textarea');
+        inputs.forEach(input => {
+            input.classList.add('form-control', 'p-3', 'bg-light', 'border-0');
+            input.style.borderRadius = '10px';
+        });
+        
+        const textarea = document.querySelector('textarea');
+        if(textarea) {
+            textarea.setAttribute('rows', '4');
+        }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load socialaccount %}
+
+{% block title %}Login — MediConnect{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center align-items-center mb-5" style="min-height: 75vh;" data-aos="fade-up">
+    <div class="col-md-6 col-lg-5">
+        <div class="card shadow-lg border-0" style="border-radius: 20px; overflow: hidden;">
+            <div class="card-header border-0 text-white text-center py-4" style="background: linear-gradient(135deg, #4361ee, #3a0ca3);">
+                <div class="mb-3">
+                    <div class="d-inline-flex align-items-center justify-content-center bg-white text-primary rounded-circle shadow-sm" style="width: 60px; height: 60px;">
+                        <i class="bi bi-box-arrow-in-right fs-2"></i>
+                    </div>
+                </div>
+                <h3 class="mb-0 fw-bold" style="font-family: 'Outfit', sans-serif;">Welcome Back</h3>
+                <p class="text-white-50 mb-0 mt-1 small">Sign in to your MediConnect account</p>
+            </div>
+            <div class="card-body p-4 p-md-5">
+                <form method="POST">
+                    {% csrf_token %}
+
+                    <div class="form-floating mb-3">
+                        <input type="email" name="email" id="email" class="form-control" placeholder="Enter your email" required style="border-radius: 12px; height: 58px;">
+                        <label for="email" class="text-muted"><i class="bi bi-envelope me-2"></i>Email Address</label>
+                    </div>
+
+                    <div class="form-floating mb-4">
+                        <input type="password" name="password" id="password" class="form-control" placeholder="Enter your password" required style="border-radius: 12px; height: 58px;">
+                        <label for="password" class="text-muted"><i class="bi bi-lock me-2"></i>Password</label>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100 py-3 mb-3 fw-bold fs-5 shadow" style="border-radius: 12px;">
+                        Sign In
+                    </button>
+                </form>
+
+                <div class="position-relative text-center my-4">
+                    <hr class="text-muted">
+                    <span class="position-absolute top-50 start-50 translate-middle bg-white px-3 text-muted small fw-medium">or continue with</span>
+                </div>
+
+                <!-- Google OAuth Sign-In Button -->
+                <a href="{% provider_login_url 'google' next='/google/callback/' %}" class="btn btn-google w-100 py-2.5">
+                    <img src="https://developers.google.com/static/identity/images/g-logo.png" alt="Google Logo">
+                    <span>Sign in with Google</span>
+                </a>
+
+                <p class="text-center mt-4 mb-0 text-muted">
+                    Don't have an account? <a href="{% url 'signup' %}" class="fw-bold text-primary text-decoration-none">Create Account</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

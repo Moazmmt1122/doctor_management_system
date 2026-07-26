@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+
+{% block title %}All Appointments — MediConnect{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 mt-3 gap-3">
+    <div>
+        <h2 class="fw-bold mb-1">
+            <i class="bi bi-calendar-check text-primary me-2"></i> All Appointments
+        </h2>
+        <p class="text-muted mb-0">View and manage your complete appointment history.</p>
+    </div>
+</div>
+
+<div class="card shadow-sm border-0 rounded-4 overflow-hidden mb-5">
+    <div class="card-body p-0">
+        {% if appointments %}
+        <div class="table-responsive px-2 pb-2 mt-3">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="bg-light text-muted small text-uppercase letter-spacing-1">
+                    <tr>
+                        <th class="ps-4 rounded-start border-bottom-0">Patient</th>
+                        <th class="border-bottom-0">Date & Time</th>
+                        <th class="border-bottom-0">Reason</th>
+                        <th class="border-bottom-0">Fee</th>
+                        <th class="border-bottom-0">Status</th>
+                        <th class="text-end pe-4 rounded-end border-bottom-0">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="border-top-0">
+                    {% for appointment in appointments %}
+                    <tr>
+                        <td class="ps-4 py-3">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width: 40px; height: 40px;">
+                                    {{ appointment.patient.user.first_name|first|upper }}
+                                </div>
+                                <div>
+                                    <h6 class="mb-0 fw-semibold">{{ appointment.patient.user.first_name }} {{ appointment.patient.user.last_name }}</h6>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="d-flex flex-column">
+                                <span class="fw-medium text-dark"><i class="bi bi-calendar-event text-primary me-1 opacity-75"></i> {{ appointment.appointment_date|date:"M d, Y" }}</span>
+                                <small class="text-muted"><i class="bi bi-clock me-1"></i> {{ appointment.time_slot }}</small>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="text-muted small" style="max-width: 150px; display: inline-block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                {{ appointment.reason|default:"—" }}
+                            </span>
+                        </td>
+                        <td><span class="fw-medium">Rs. {{ appointment.fee }}</span></td>
+                        <td>
+                            {% if appointment.status == 'pending' %}
+                                <span class="badge bg-warning bg-opacity-25 text-warning border border-warning border-opacity-50 px-2 py-1 rounded-pill">Pending</span>
+                            {% elif appointment.status == 'confirmed' %}
+                                <span class="badge bg-success bg-opacity-25 text-success border border-success border-opacity-50 px-2 py-1 rounded-pill">Confirmed</span>
+                            {% elif appointment.status == 'cancelled' %}
+                                <span class="badge bg-secondary bg-opacity-25 text-secondary border border-secondary border-opacity-50 px-2 py-1 rounded-pill">Cancelled</span>
+                            {% elif appointment.status == 'declined' %}
+                                <span class="badge bg-danger bg-opacity-25 text-danger border border-danger border-opacity-50 px-2 py-1 rounded-pill">Declined</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-end pe-4">
+                            {% if appointment.status == 'pending' %}
+                                <div class="d-flex gap-2 justify-content-end">
+                                    <form method="POST" action="{% url 'confirm_appointment' appointment.id %}">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-sm btn-success rounded-circle shadow-sm" title="Confirm" style="width: 32px; height: 32px; padding: 0;">
+                                            <i class="bi bi-check-lg"></i>
+                                        </button>
+                                    </form>
+                                    <form method="POST" action="{% url 'decline_appointment' appointment.id %}">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-sm btn-danger rounded-circle shadow-sm" title="Decline" style="width: 32px; height: 32px; padding: 0;">
+                                            <i class="bi bi-x-lg"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            {% elif appointment.status == 'confirmed' %}
+                                <form method="POST" action="{% url 'decline_appointment' appointment.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill px-3 py-1">
+                                        Cancel
+                                    </button>
+                                </form>
+                            {% else %}
+                                <span class="text-muted small">—</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="text-center py-5">
+            <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                <i class="bi bi-calendar-x text-muted opacity-50" style="font-size: 2.5rem;"></i>
+            </div>
+            <h5 class="fw-bold text-dark mb-1">No appointments found</h5>
+            <p class="text-muted mb-0">You do not have any appointment history.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,226 @@
+{% extends 'base.html' %}
+
+{% block title %}Doctor Profile — MediConnect{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 mt-3 gap-3" data-aos="fade-up">
+    <div>
+        <h2 class="fw-bold mb-1">
+            <i class="bi bi-person-circle text-primary me-2"></i> My Profile
+        </h2>
+        <p class="text-muted mb-0">Manage your personal information, clinical details, and availability.</p>
+    </div>
+</div>
+
+<div class="row g-4 mb-5">
+    <!-- Current Info -->
+    <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
+        <div class="card shadow-sm border-0 rounded-4 overflow-hidden h-100">
+            <div style="height: 100px; background: linear-gradient(135deg, #1e293b, #3a506b); animate: pulse 3s infinite;"></div>
+            <div class="card-body px-4 pb-4 pt-0 position-relative text-center">
+                <!-- Avatar image trigger and Removal form -->
+                <div class="bg-white rounded-circle p-1 shadow-sm d-inline-block position-relative" style="margin-top: -40px; margin-bottom: 15px;">
+                    <div class="bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center overflow-hidden" style="width: 80px; height: 80px; cursor: pointer;" onclick="document.getElementById('profileImageInput').click();" title="Change profile photo">
+                        {% if doctor.user.profile_image %}
+                            <img src="{{ doctor.user.profile_image.url }}" alt="Profile" class="w-100 h-100 object-fit-cover">
+                        {% else %}
+                            <i class="bi bi-person-fill text-primary opacity-50" style="font-size: 3rem;"></i>
+                        {% endif %}
+                    </div>
+                    
+                    {% if doctor.user.profile_image %}
+                    <form method="POST" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" name="remove_image" class="btn btn-sm btn-danger rounded-circle position-absolute top-0 end-0 p-1 d-flex align-items-center justify-content-center border-2 border-white" style="width: 25px; height: 25px; transform: translate(10%, -10%);" title="Remove Profile Photo">
+                            <i class="bi bi-trash-fill" style="font-size: 0.75rem;"></i>
+                        </button>
+                    </form>
+                    {% else %}
+                    <div class="position-absolute bottom-0 end-0 bg-white rounded-circle shadow-sm border p-1" style="transform: translate(10%, 10%); pointer-events: none;">
+                        <i class="bi bi-camera-fill text-primary" style="font-size: 0.8rem;"></i>
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <h5 class="fw-bold mb-1">Dr. {{ doctor.user.first_name }} {{ doctor.user.last_name }}</h5>
+                <p class="text-muted small mb-4"><i class="bi bi-envelope me-1"></i> {{ doctor.user.email }}</p>
+                
+                <h6 class="fw-bold mb-3 small text-uppercase text-muted letter-spacing-1 border-bottom pb-2">Professional Details</h6>
+                
+                <ul class="list-unstyled mb-0 d-flex flex-column gap-3 text-start">
+                    <li class="d-flex align-items-start gap-3">
+                        <div class="text-primary mt-1"><i class="bi bi-telephone-fill"></i></div>
+                        <div>
+                            <small class="text-muted d-block lh-1 mb-1">Phone</small>
+                            <span class="fw-semibold">{{ doctor.user.phone|default:"Not set" }}</span>
+                        </div>
+                    </li>
+                    <li class="d-flex align-items-start gap-3">
+                        <div class="text-info mt-1"><i class="bi bi-heart-pulse-fill"></i></div>
+                        <div>
+                            <small class="text-muted d-block lh-1 mb-1">Specialization</small>
+                            <span class="fw-semibold">{{ doctor.specialization|default:"Not set" }}</span>
+                        </div>
+                    </li>
+                    <li class="d-flex align-items-start gap-3">
+                        <div class="text-warning mt-1"><i class="bi bi-star-fill"></i></div>
+                        <div>
+                            <small class="text-muted d-block lh-1 mb-1">Experience</small>
+                            <span class="fw-semibold">{{ doctor.experience_years }} years</span>
+                        </div>
+                    </li>
+                    <li class="d-flex align-items-start gap-3">
+                        <div class="text-success mt-1"><i class="bi bi-cash"></i></div>
+                        <div>
+                            <small class="text-muted d-block lh-1 mb-1">Consultation Fee</small>
+                            <span class="fw-semibold text-success">Rs. {{ doctor.consultation_fee }}</span>
+                        </div>
+                    </li>
+                    <li class="d-flex align-items-start gap-3">
+                        <div class="text-secondary mt-1"><i class="bi bi-building"></i></div>
+                        <div>
+                            <small class="text-muted d-block lh-1 mb-1">Clinic</small>
+                            <span class="fw-semibold">{{ doctor.clinic_name|default:"Not set" }}</span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-8 d-flex flex-column gap-4" data-aos="fade-up" data-aos-delay="200">
+        <!-- Edit Form -->
+        <div class="card shadow-sm border-0 rounded-4 overflow-hidden">
+            <div class="card-header bg-white border-bottom-0 pt-4 pb-0 px-4">
+                <h5 class="fw-bold mb-0 d-flex align-items-center">
+                    <i class="bi bi-pencil-square text-primary me-2 fs-4"></i> Update Information
+                </h5>
+            </div>
+            <div class="card-body p-4 p-md-5">
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form.profile_image }}
+                    
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <label class="form-label text-muted small fw-bold text-uppercase letter-spacing-1">First Name</label>
+                            {{ form.first_name }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label text-muted small fw-bold text-uppercase letter-spacing-1">Last Name</label>
+                            {{ form.last_name }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label text-muted small fw-bold text-uppercase letter-spacing-1">Phone</label>
+                            {{ form.phone }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label text-muted small fw-bold text-uppercase letter-spacing-1">Specialization</label>
+                            {{ form.specialization }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label text-muted small fw-bold text-uppercase letter-spacing-1">Years of Exp</label>
+                            {{ form.experience_years }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label text-muted small fw-bold text-uppercase letter-spacing-1">Consultation Fee (Rs.)</label>
+                            {{ form.consultation_fee }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label text-muted small fw-bold text-uppercase letter-spacing-1">Clinic Name</label>
+                            {{ form.clinic_name }}
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label text-muted small fw-bold text-uppercase letter-spacing-1">Professional Bio</label>
+                            {{ form.bio }}
+                        </div>
+                    </div>
+
+                    <div class="text-end">
+                        <button type="submit" class="btn btn-primary px-5 py-3 fw-bold rounded-3 shadow-sm" style="font-size: 1.05rem;">
+                            Save Changes
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Time Slots Section -->
+        <div class="card shadow-sm border-0 rounded-4 overflow-hidden">
+            <div class="card-header bg-white border-bottom-0 pt-4 pb-0 px-4">
+                <h5 class="fw-bold mb-0 d-flex align-items-center">
+                    <i class="bi bi-clock-history text-info me-2 fs-4"></i> Manage Availability
+                </h5>
+            </div>
+            <div class="card-body p-4 p-md-5">
+                <div class="row g-4">
+                    <div class="col-md-7 border-end-md pe-md-4">
+                        <h6 class="fw-bold mb-3 small text-uppercase text-muted letter-spacing-1">Current Slots</h6>
+                        {% if time_slots %}
+                        <div class="d-flex flex-wrap gap-2">
+                            {% for slot in time_slots %}
+                            <div class="badge bg-light text-dark border p-2.5 d-flex align-items-center gap-2 rounded-3" style="font-size: 0.85rem;">
+                                <span><i class="bi bi-clock text-primary me-1"></i> {{ slot.start_time|time:"H:i" }} - {{ slot.end_time|time:"H:i" }}</span>
+                                <form method="POST" action="{% url 'delete_time_slot' slot.id %}" class="m-0">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-sm text-danger p-0 ms-1 border-0" title="Delete">
+                                        <i class="bi bi-x-circle-fill"></i>
+                                    </button>
+                                </form>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% else %}
+                        <div class="text-center py-4 bg-light rounded-3">
+                            <p class="text-muted small mb-0">No time slots added yet.</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="col-md-5 ps-md-4">
+                        <h6 class="fw-bold mb-3 small text-uppercase text-muted letter-spacing-1">Add New Slot</h6>
+                        <form method="POST" action="{% url 'add_time_slot' %}" class="row g-2 align-items-end">
+                            {% csrf_token %}
+                            <div class="col-12 mb-2">
+                                <label class="form-label small text-muted mb-1">Start Time</label>
+                                <input type="time" name="start_time" class="form-control bg-light border-0 p-3" style="border-radius:10px;" required onclick="this.showPicker()">
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label class="form-label small text-muted mb-1">End Time</label>
+                                <input type="time" name="end_time" class="form-control bg-light border-0 p-3" style="border-radius:10px;" required onclick="this.showPicker()">
+                            </div>
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-info text-white w-100 fw-bold py-3 rounded-3 shadow-sm">
+                                    <i class="bi bi-plus-lg me-1"></i> Add Slot
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const inputs = document.querySelectorAll('input[type="text"], input[type="number"], textarea');
+        inputs.forEach(input => {
+            if(input.id !== 'profileImageInput') {
+                input.classList.add('form-control', 'p-3', 'bg-light', 'border-0');
+                input.style.borderRadius = '10px';
+            }
+        });
+        
+        const profileInput = document.getElementById('profileImageInput');
+        if(profileInput) {
+            profileInput.addEventListener('change', function() {
+                if(this.files && this.files[0]) {
+                    // Automatically submit form when image is selected
+                    this.closest('form').submit();
+                }
+            });
+        }
+    });
+</script>
+{% endblock %}

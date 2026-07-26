@@ -1,0 +1,174 @@
+{% extends 'base.html' %}
+
+{% block title %}My Profile — MediConnect{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 mt-3 gap-3" data-aos="fade-up">
+    <div>
+        <h2 class="fw-bold mb-1">
+            <i class="bi bi-person-badge text-primary me-2"></i> My Profile
+        </h2>
+        <p class="text-muted mb-0">Manage your personal information and health records.</p>
+    </div>
+</div>
+
+<div class="row g-4 mb-5">
+    <!-- Current Info -->
+    <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
+        <div class="card shadow-sm border-0 rounded-4 overflow-hidden h-100">
+            <div style="height: 100px; background: linear-gradient(135deg, #4361ee, #3a0ca3);"></div>
+            <div class="card-body px-4 pb-4 pt-0 position-relative text-center">
+                <!-- Profile Avatar Image trigger and Removal form -->
+                <div class="bg-white rounded-circle p-1 shadow-sm d-inline-block position-relative" style="margin-top: -40px; margin-bottom: 15px;">
+                    <div class="bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center overflow-hidden" style="width: 80px; height: 80px; cursor: pointer;" onclick="document.getElementById('profileImageInput').click();" title="Change profile picture">
+                        {% if profile.user.profile_image %}
+                            <img src="{{ profile.user.profile_image.url }}" alt="Profile" class="w-100 h-100 object-fit-cover">
+                        {% else %}
+                            <i class="bi bi-person-fill text-primary opacity-50" style="font-size: 3rem;"></i>
+                        {% endif %}
+                    </div>
+                    
+                    {% if profile.user.profile_image %}
+                    <form method="POST" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" name="remove_image" class="btn btn-sm btn-danger rounded-circle position-absolute top-0 end-0 p-1 d-flex align-items-center justify-content-center border-2 border-white" style="width: 25px; height: 25px; transform: translate(10%, -10%);" title="Remove Profile Photo">
+                            <i class="bi bi-trash-fill" style="font-size: 0.75rem;"></i>
+                        </button>
+                    </form>
+                    {% else %}
+                    <div class="position-absolute bottom-0 end-0 bg-white rounded-circle shadow-sm border p-1" style="transform: translate(10%, 10%); pointer-events: none;">
+                        <i class="bi bi-camera-fill text-primary" style="font-size: 0.8rem;"></i>
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <h5 class="fw-bold mb-1">{{ profile.user.first_name }} {{ profile.user.last_name }}</h5>
+                <p class="text-muted small mb-4"><i class="bi bi-envelope me-1"></i> {{ profile.user.email }}</p>
+                
+                <h6 class="fw-bold mb-3 small text-uppercase text-muted letter-spacing-1 border-bottom pb-2">Health & Contact</h6>
+                
+                <ul class="list-unstyled mb-0 d-flex flex-column gap-3 text-start">
+                    <li class="d-flex align-items-start gap-3">
+                        <div class="text-primary mt-1"><i class="bi bi-telephone-fill"></i></div>
+                        <div>
+                            <small class="text-muted d-block lh-1 mb-1">Phone</small>
+                            <span class="fw-semibold">{{ profile.user.phone|default:"Not set" }}</span>
+                        </div>
+                    </li>
+                    <li class="d-flex align-items-start gap-3">
+                        <div class="text-info mt-1"><i class="bi bi-calendar-date"></i></div>
+                        <div>
+                            <small class="text-muted d-block lh-1 mb-1">Date of Birth</small>
+                            <span class="fw-semibold">{{ profile.date_of_birth|date:"M d, Y"|default:"Not set" }}</span>
+                        </div>
+                    </li>
+                    <li class="d-flex align-items-start gap-3">
+                        <div class="text-danger mt-1"><i class="bi bi-droplet-fill"></i></div>
+                        <div>
+                            <small class="text-muted d-block lh-1 mb-1">Blood Group</small>
+                            <span class="fw-semibold badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25">{{ profile.blood_group|default:"Not set" }}</span>
+                        </div>
+                    </li>
+                    <li class="d-flex align-items-start gap-3">
+                        <div class="text-warning mt-1"><i class="bi bi-exclamation-triangle-fill"></i></div>
+                        <div>
+                            <small class="text-muted d-block lh-1 mb-1">Allergies</small>
+                            <span class="fw-semibold">{{ profile.allergies|default:"None" }}</span>
+                        </div>
+                    </li>
+                    <li class="d-flex align-items-start gap-3">
+                        <div class="text-secondary mt-1"><i class="bi bi-geo-alt-fill"></i></div>
+                        <div>
+                            <small class="text-muted d-block lh-1 mb-1">Address</small>
+                            <span class="fw-semibold">{{ profile.address|default:"Not set" }}</span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Form -->
+    <div class="col-lg-8" data-aos="fade-up" data-aos-delay="200">
+        <div class="card shadow-sm border-0 rounded-4 overflow-hidden h-100">
+            <div class="card-header bg-white border-bottom-0 pt-4 pb-0 px-4">
+                <h5 class="fw-bold mb-0 d-flex align-items-center">
+                    <i class="bi bi-pencil-square text-primary me-2 fs-4"></i> Update Information
+                </h5>
+            </div>
+            <div class="card-body p-4 p-md-5">
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form.profile_image }}
+                    
+                    <div class="row g-4 mb-4">
+                        <div class="col-md-6">
+                            <label class="form-label text-muted small fw-bold text-uppercase letter-spacing-1">First Name</label>
+                            {{ form.first_name }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label text-muted small fw-bold text-uppercase letter-spacing-1">Last Name</label>
+                            {{ form.last_name }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label text-muted small fw-bold text-uppercase letter-spacing-1">Phone</label>
+                            {{ form.phone }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label text-muted small fw-bold text-uppercase letter-spacing-1">Date of Birth</label>
+                            <input type="date" name="date_of_birth" id="id_date_of_birth" class="form-control p-3 bg-light border-0" value="{{ form.date_of_birth.value|date:'Y-m-d' }}" onclick="this.showPicker()">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label text-muted small fw-bold text-uppercase letter-spacing-1">Blood Group</label>
+                            {{ form.blood_group }}
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label text-muted small fw-bold text-uppercase letter-spacing-1">Address</label>
+                            {{ form.address }}
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label text-muted small fw-bold text-uppercase letter-spacing-1">Allergies (if any)</label>
+                            {{ form.allergies }}
+                        </div>
+                    </div>
+
+                    <div class="text-end mt-2">
+                        <button type="submit" class="btn btn-primary px-5 py-3 fw-bold rounded-3 shadow-sm" style="font-size: 1.05rem;">
+                            Save Changes
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const inputs = document.querySelectorAll('input[type="text"], input[type="date"], select, textarea');
+        inputs.forEach(input => {
+            if(input.id !== 'profileImageInput') {
+                input.classList.add('form-control', 'p-3', 'bg-light', 'border-0');
+                input.style.borderRadius = '10px';
+            }
+        });
+        
+        const profileInput = document.getElementById('profileImageInput');
+        if(profileInput) {
+            profileInput.addEventListener('change', function() {
+                if(this.files && this.files[0]) {
+                    // Automatically submit form when image is selected
+                    this.closest('form').submit();
+                }
+            });
+        }
+        
+        // Special handling for selects if needed
+        const selects = document.querySelectorAll('select');
+        selects.forEach(s => {
+            s.classList.remove('form-control');
+            s.classList.add('form-select');
+        });
+    });
+</script>
+{% endblock %}

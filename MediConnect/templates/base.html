@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}MediConnect{% endblock %}</title>
+    <meta name="description" content="MediConnect - Online Doctor Appointment Management System">
+    
+    <!-- Google Fonts: Inter & Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- AOS Animate on Scroll -->
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --primary-hover: #3a0ca3;
+            --secondary-color: #4cc9f0;
+            --accent-color: #f72585;
+            --bg-color: #f0f2f5;
+            --card-bg: #ffffff;
+            --text-main: #1a1a2e;
+            --text-muted: #6c757d;
+            --glass-bg: rgba(255, 255, 255, 0.85);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.025);
+            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        * { scroll-behavior: smooth; }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        h1, h2, h3, h4, h5, h6, .navbar-brand {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+        }
+
+        main {
+            flex: 1;
+            padding-bottom: 2rem;
+        }
+
+        /* ============================================================
+           NAVBAR — Glassmorphism Premium
+           ============================================================ */
+        .navbar {
+            background: rgba(15, 23, 42, 0.97) !important;
+            backdrop-filter: blur(20px) saturate(180%);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.15);
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+        
+        .navbar-brand {
+            font-size: 1.55rem;
+            color: #fff !important;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+        }
+
+        .navbar-brand:hover { transform: scale(1.02); }
+
+        .navbar-brand i {
+            color: var(--secondary-color);
+            filter: drop-shadow(0 0 8px rgba(76, 201, 240, 0.4));
+        }
+
+        .nav-link {
+            color: rgba(255, 255, 255, 0.7) !important;
+            font-weight: 500;
+            margin: 0 3px;
+            padding: 8px 14px !important;
+            border-radius: 8px;
+            position: relative;
+            transition: var(--transition);
+            font-size: 0.92rem;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: #fff !important;
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .navbar .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+            border: none;
+            border-radius: 10px;
+            padding: 8px 22px;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
+            font-size: 0.9rem;
+        }
+
+        .navbar .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(67, 97, 238, 0.4);
+        }
+
+        /* ============================================================
+           CARDS — Premium Glassmorphism
+           ============================================================ */
+        .card {
+            background: var(--card-bg);
+            border: 1px solid rgba(0, 0, 0, 0.04);
+            border-radius: 16px;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+            overflow: hidden;
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-3px);
+        }
+
+        /* ============================================================
+           FORMS — Modern Styling
+           ============================================================ */
+        .form-control, .form-select {
+            border-radius: 12px;
+            padding: 12px 16px;
+            border: 1.5px solid rgba(0,0,0,0.08);
+            background-color: #f8f9fb;
+            transition: var(--transition);
+            font-size: 0.95rem;
+        }
+
+        .form-control:focus, .form-select:focus {
+            background-color: #fff;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(67, 97, 238, 0.1);
+        }
+
+        /* ============================================================
+           BUTTONS — Gradient Premium
+           ============================================================ */
+        .btn {
+            border-radius: 10px;
+            padding: 10px 22px;
+            font-weight: 600;
+            transition: var(--transition);
+            font-size: 0.93rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), #3f37c9);
+            border: none;
+            box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #3f37c9, var(--primary-hover));
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(67, 97, 238, 0.4);
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, #2a9d8f, #21867a);
+            border: none;
+        }
+
+        .btn-success:hover {
+            background: linear-gradient(135deg, #21867a, #1a6b62);
+            transform: translateY(-2px);
+        }
+
+        .btn-outline-primary {
+            border-width: 2px;
+        }
+
+        .btn-outline-primary:hover {
+            transform: translateY(-2px);
+        }
+
+        /* ============================================================
+           BADGES — Soft Styling
+           ============================================================ */
+        .badge {
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.75rem;
+        }
+
+        /* ============================================================
+           TABLES — Clean & Modern
+           ============================================================ */
+        .table {
+            vertical-align: middle;
+        }
+        .table th {
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            border-bottom: 2px solid #edf2f7;
+            padding: 14px 12px;
+        }
+        .table td {
+            padding: 14px 12px;
+            color: var(--text-main);
+        }
+        .table-hover tbody tr:hover {
+            background-color: rgba(67, 97, 238, 0.03);
+        }
+
+        /* ============================================================
+           FOOTER — Premium Dark Theme
+           ============================================================ */
+        .footer {
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            color: rgba(255,255,255,0.8);
+            padding: 50px 0 25px;
+            margin-top: auto;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color), var(--accent-color), var(--primary-color));
+            background-size: 200% 100%;
+            animation: gradientSlide 4s ease infinite;
+        }
+
+        @keyframes gradientSlide {
+            0% { background-position: 0% 0%; }
+            50% { background-position: 100% 0%; }
+            100% { background-position: 0% 0%; }
+        }
+
+        .footer a { transition: var(--transition); }
+        .footer a:hover { opacity: 1 !important; transform: translateY(-2px); }
+
+        .footer p { margin-bottom: 8px; }
+        
+        /* ============================================================
+           ALERTS — Sleek Styling
+           ============================================================ */
+        .alert {
+            border-radius: 14px;
+            border: none;
+            box-shadow: var(--shadow-sm);
+            animation: slideDown 0.4s ease;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ============================================================
+           CUSTOM SCROLLBAR
+           ============================================================ */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #c1c1c1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #a1a1a1; }
+
+        /* ============================================================
+           UTILITY CLASSES
+           ============================================================ */
+        .letter-spacing-1 { letter-spacing: 0.5px; }
+        .object-fit-cover { object-fit: cover; }
+        .hover-lift:hover { transform: translateY(-5px); }
+        
+        /* Google Sign-In Button */
+        .btn-google {
+            background: #ffffff;
+            border: 2px solid #e0e0e0;
+            color: #333;
+            font-weight: 600;
+            padding: 12px 20px;
+            border-radius: 12px;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .btn-google:hover {
+            border-color: #4285f4;
+            box-shadow: 0 4px 15px rgba(66, 133, 244, 0.2);
+            transform: translateY(-2px);
+        }
+        .btn-google img {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Pulse Animation */
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        .pulse-animation { animation: pulse 2s ease-in-out infinite; }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'home' %}">
+                <i class="bi bi-heart-pulse-fill"></i> MediConnect
+            </a>
+            <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center gap-1">
+                    {% if user.is_authenticated %}
+                        {% if user.user_type == 'patient' %}
+                            <li class="nav-item"><a class="nav-link" href="{% url 'home' %}"><i class="bi bi-house me-1"></i>Home</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'doctors' %}"><i class="bi bi-people me-1"></i>Doctors</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'patient_dashboard' %}"><i class="bi bi-speedometer2 me-1"></i>Dashboard</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'patient_appointments' %}"><i class="bi bi-calendar3 me-1"></i>Appointments</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'patient_profile' %}"><i class="bi bi-person-circle me-1"></i>Profile</a></li>
+                        {% elif user.user_type == 'doctor' %}
+                            <li class="nav-item"><a class="nav-link" href="{% url 'doctor_dashboard' %}"><i class="bi bi-speedometer2 me-1"></i>Dashboard</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'doctor_appointments' %}"><i class="bi bi-calendar3 me-1"></i>Appointments</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'doctor_profile' %}"><i class="bi bi-person-circle me-1"></i>Profile</a></li>
+                        {% endif %}
+                        <li class="nav-item ms-lg-2 mt-2 mt-lg-0">
+                            <div class="d-flex align-items-center gap-2">
+                                <div class="bg-primary bg-opacity-25 rounded-circle d-flex align-items-center justify-content-center overflow-hidden" style="width: 34px; height: 34px;">
+                                    {% if user.profile_image %}
+                                        <img src="{{ user.profile_image.url }}" class="w-100 h-100 object-fit-cover" alt="Profile">
+                                    {% else %}
+                                        <span class="text-white fw-bold small">{{ user.first_name|first|upper }}</span>
+                                    {% endif %}
+                                </div>
+                                <a class="nav-link text-white-50 small py-0" href="{% url 'logout' %}" style="font-size: 0.85rem;">
+                                    <i class="bi bi-box-arrow-right text-danger me-1"></i>Logout
+                                </a>
+                            </div>
+                        </li>
+                    {% else %}
+                        <li class="nav-item"><a class="nav-link" href="{% url 'home' %}"><i class="bi bi-house me-1"></i>Home</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'doctors' %}"><i class="bi bi-people me-1"></i>Doctors</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'contact' %}"><i class="bi bi-chat-dots me-1"></i>Contact</a></li>
+                        <li class="nav-item ms-lg-2"><a class="nav-link text-white opacity-100" href="{% url 'login' %}">Log In</a></li>
+                        <li class="nav-item mt-2 mt-lg-0"><a class="nav-link btn btn-primary text-white ms-lg-2 px-4" href="{% url 'signup' %}">Sign Up</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Django Messages -->
+    <div class="container mt-4">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show d-flex align-items-center" role="alert">
+                    {% if message.tags == 'success' %}
+                        <i class="bi bi-check-circle-fill me-2 fs-5 text-success"></i>
+                    {% elif message.tags == 'error' %}
+                        <i class="bi bi-exclamation-triangle-fill me-2 fs-5 text-danger"></i>
+                    {% else %}
+                        <i class="bi bi-info-circle-fill me-2 fs-5"></i>
+                    {% endif %}
+                    <div>{{ message }}</div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <!-- Main Content -->
+    <main>
+        <div class="container mt-2">
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer text-center">
+        <div class="container">
+            <div class="row justify-content-center mb-4">
+                <div class="col-lg-6">
+                    <h5 class="fw-bold text-white mb-2"><i class="bi bi-heart-pulse-fill me-2" style="color: var(--secondary-color);"></i>MediConnect</h5>
+                    <p class="text-white-50 small mb-3">Your trusted platform for seamless healthcare appointments and doctor consultations.</p>
+                </div>
+            </div>
+            <div class="mb-3">
+                <a href="#" class="text-white opacity-50 text-decoration-none mx-2 d-inline-block"><i class="bi bi-facebook fs-5"></i></a>
+                <a href="#" class="text-white opacity-50 text-decoration-none mx-2 d-inline-block"><i class="bi bi-twitter-x fs-5"></i></a>
+                <a href="#" class="text-white opacity-50 text-decoration-none mx-2 d-inline-block"><i class="bi bi-linkedin fs-5"></i></a>
+                <a href="#" class="text-white opacity-50 text-decoration-none mx-2 d-inline-block"><i class="bi bi-instagram fs-5"></i></a>
+                <a href="#" class="text-white opacity-50 text-decoration-none mx-2 d-inline-block"><i class="bi bi-github fs-5"></i></a>
+            </div>
+            <hr class="border-white border-opacity-10 mx-auto" style="max-width: 400px;">
+            <p class="mb-1 fw-medium small">&copy; 2026 MediConnect — Online Doctor Appointment System</p>
+            <p class="mb-0 small text-white-50" style="font-size: 0.78rem;">Built by Waqar Younas | Roll No: F23BDOCS1M01118 | IUB F23-27</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- AOS -->
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    <script>
+        AOS.init({ duration: 600, once: true, easing: 'ease-out-quart' });
+    </script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

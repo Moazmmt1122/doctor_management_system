@@ -1,0 +1,161 @@
+{% extends 'base.html' %}
+{% load socialaccount %}
+
+{% block title %}Sign Up — MediConnect{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center align-items-center mb-5" style="min-height: 80vh;" data-aos="fade-up">
+    <div class="col-md-10 col-lg-8">
+        <div class="card shadow-lg border-0" style="border-radius: 20px; overflow: hidden;">
+            <div class="row g-0">
+                <!-- Left Info Side -->
+                <div class="col-md-5 d-none d-md-block text-white p-5 d-flex flex-column justify-content-center position-relative" style="background: linear-gradient(135deg, #0f172a, #1e293b);">
+                    <div class="position-absolute top-0 start-0 w-100 h-100" style="background: url('data:image/svg+xml,%3Csvg width=\'20\' height=\'20\' viewBox=\'0 0 20 20\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'0.04\' fill-rule=\'evenodd\'%3E%3Ccircle cx=\'3\' cy=\'3\' r=\'3\'/%3E%3Ccircle cx=\'13\' cy=\'13\' r=\'3\'/%3E%3C/g%3E%3C/svg%3E');"></div>
+                    <div class="position-relative z-1">
+                        <h2 class="fw-bold mb-4" style="font-family: 'Outfit', sans-serif;">Join MediConnect Today</h2>
+                        <ul class="list-unstyled mb-0 gap-4 d-flex flex-column">
+                            <li class="d-flex align-items-center"><i class="bi bi-check-circle-fill text-success fs-4 me-3"></i> <span>Book instant appointments</span></li>
+                            <li class="d-flex align-items-center"><i class="bi bi-check-circle-fill text-success fs-4 me-3"></i> <span>Access top specialists</span></li>
+                            <li class="d-flex align-items-center"><i class="bi bi-check-circle-fill text-success fs-4 me-3"></i> <span>Manage your health records</span></li>
+                            <li class="d-flex align-items-center"><i class="bi bi-check-circle-fill text-success fs-4 me-3"></i> <span>24/7 Secure access</span></li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Right Form Side -->
+                <div class="col-md-7">
+                    <div class="p-4 p-md-5 bg-white">
+                        <div class="text-center mb-4">
+                            <h3 class="fw-bold text-dark mb-1" style="font-family: 'Outfit', sans-serif;">Create Account</h3>
+                            <p class="text-muted small">Fill in your details to get started</p>
+                        </div>
+                        
+                        {% if form.non_field_errors %}
+                            {% for error in form.non_field_errors %}
+                                <div class="alert alert-danger rounded-3 py-2 px-3 small border-0"><i class="bi bi-exclamation-triangle-fill me-2"></i>{{ error }}</div>
+                            {% endfor %}
+                        {% endif %}
+
+                        <form method="POST">
+                            {% csrf_token %}
+
+                            <div class="row g-3 mb-3">
+                                <div class="col-sm-6">
+                                    <label for="id_first_name" class="form-label text-muted small fw-medium mb-1">First Name</label>
+                                    {{ form.first_name }}
+                                    {% if form.first_name.errors %}
+                                        <div class="text-danger mt-1" style="font-size: 0.75rem;">{{ form.first_name.errors.0 }}</div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-sm-6">
+                                    <label for="id_last_name" class="form-label text-muted small fw-medium mb-1">Last Name</label>
+                                    {{ form.last_name }}
+                                    {% if form.last_name.errors %}
+                                        <div class="text-danger mt-1" style="font-size: 0.75rem;">{{ form.last_name.errors.0 }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="id_email" class="form-label text-muted small fw-medium mb-1">Email Address</label>
+                                {{ form.email }}
+                                {% if form.email.errors %}
+                                    <div class="text-danger mt-1" style="font-size: 0.75rem;">{{ form.email.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="id_phone" class="form-label text-muted small fw-medium mb-1">Phone Number (Optional)</label>
+                                {{ form.phone }}
+                                {% if form.phone.errors %}
+                                    <div class="text-danger mt-1" style="font-size: 0.75rem;">{{ form.phone.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+
+                            <div class="row g-3 mb-3">
+                                <div class="col-sm-6">
+                                    <label for="id_password" class="form-label text-muted small fw-medium mb-1">Password</label>
+                                    {{ form.password }}
+                                    {% if form.password.errors %}
+                                        <div class="text-danger mt-1" style="font-size: 0.75rem;">{{ form.password.errors.0 }}</div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-sm-6">
+                                    <label for="id_confirm_password" class="form-label text-muted small fw-medium mb-1">Confirm Password</label>
+                                    {{ form.confirm_password }}
+                                    {% if form.confirm_password.errors %}
+                                        <div class="text-danger mt-1" style="font-size: 0.75rem;">{{ form.confirm_password.errors.0 }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="id_user_type" class="form-label text-muted small fw-medium mb-1">Register As</label>
+                                {{ form.user_type }}
+                            </div>
+
+                            <div id="patient_fields" style="display: none;">
+                                <div class="row g-3 mb-3">
+                                    <div class="col-sm-6">
+                                        <label for="id_blood_group" class="form-label text-muted small fw-medium mb-1">Blood Group (Optional)</label>
+                                        {{ form.blood_group }}
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <label for="id_allergies" class="form-label text-muted small fw-medium mb-1">Allergies (Optional)</label>
+                                        {{ form.allergies }}
+                                    </div>
+                                </div>
+                                <div class="mb-4">
+                                    <label for="id_address" class="form-label text-muted small fw-medium mb-1">Address (Optional)</label>
+                                    {{ form.address }}
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary w-100 py-3 fw-bold rounded-3 shadow" style="border-radius: 12px;">
+                                Create Account
+                            </button>
+                        </form>
+
+                        <div class="position-relative text-center my-4">
+                            <hr class="text-muted">
+                            <span class="position-absolute top-50 start-50 translate-middle bg-white px-3 text-muted small fw-medium">or continue with</span>
+                        </div>
+
+                        <!-- Google OAuth Sign-In Button -->
+                        <a href="{% provider_login_url 'google' next='/google/callback/' %}" class="btn btn-google w-100 py-2.5">
+                            <img src="https://developers.google.com/static/identity/images/g-logo.png" alt="Google Logo">
+                            <span>Sign up with Google</span>
+                        </a>
+
+                        <div class="text-center mt-4">
+                            <p class="text-muted small mb-0">
+                                Already have an account? <a href="{% url 'login' %}" class="fw-bold text-primary text-decoration-none">Sign In</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const userTypeSelect = document.getElementById('id_user_type');
+        const patientFields = document.getElementById('patient_fields');
+        
+        function toggleFields() {
+            if (userTypeSelect.value === 'patient') {
+                patientFields.style.display = 'block';
+            } else {
+                patientFields.style.display = 'none';
+            }
+        }
+        
+        if (userTypeSelect) {
+            userTypeSelect.addEventListener('change', toggleFields);
+            toggleFields();
+        }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,197 @@
+{% extends "admin/base.html" %}
+
+{% block title %}{% if subtitle %}{{ subtitle }} | {% endif %}{{ title }} | MediConnect Admin{% endblock %}
+
+{% block branding %}
+<div id="site-name">
+    <a href="{% url 'admin:index' %}" style="font-family: 'Outfit', sans-serif; font-weight: 700; letter-spacing: -0.5px; display: flex; align-items: center; gap: 8px;">
+        <span style="font-size: 1.4rem;">🩺 MediConnect</span>
+        <span style="font-size: 0.8rem; background: rgba(255,255,255,0.15); padding: 3px 8px; border-radius: 10px; font-weight: 500;">Console</span>
+    </a>
+</div>
+{% endblock %}
+
+{% block extrastyle %}
+{{ block.super }}
+<style>
+    /* ============================================================
+       PREMIUM CUSTOM ADMIN THEME FOR MEDICONNECT
+       ============================================================ */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&display=swap');
+
+    body {
+        font-family: 'Inter', sans-serif !important;
+        background-color: #f3f4f6 !important;
+        color: #1f2937 !important;
+    }
+
+    #header {
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%) !important;
+        padding: 15px 30px !important;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important;
+        border-bottom: 1px solid rgba(255,255,255,0.06) !important;
+    }
+
+    #header a:link, #header a:visited {
+        color: #ffffff !important;
+    }
+
+    #branding h1 {
+        margin: 0 !important;
+        color: #ffffff !important;
+    }
+
+    div.breadcrumbs {
+        background: #ffffff !important;
+        border-bottom: 1px solid #e5e7eb !important;
+        padding: 12px 30px !important;
+        color: #6b7280 !important;
+        font-size: 0.85rem !important;
+        font-weight: 500 !important;
+    }
+
+    div.breadcrumbs a {
+        color: #4361ee !important;
+        font-weight: 600 !important;
+        text-decoration: none !important;
+    }
+
+    div.breadcrumbs a:hover {
+        text-decoration: underline !important;
+    }
+
+    /* Module and Tables styling */
+    .module {
+        background: #ffffff !important;
+        border: 1px solid #e5e7eb !important;
+        border-radius: 12px !important;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05) !important;
+        margin-bottom: 30px !important;
+        overflow: hidden !important;
+    }
+
+    .module h2, .module caption {
+        background: #f8fafc !important;
+        color: #334155 !important;
+        font-family: 'Outfit', sans-serif !important;
+        font-weight: 600 !important;
+        font-size: 0.95rem !important;
+        padding: 14px 20px !important;
+        border-bottom: 1px solid #e2e8f0 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.5px !important;
+    }
+
+    /* Links and Buttons styling */
+    a:link, a:visited {
+        color: #4361ee !important;
+    }
+
+    .button, input[type=submit], input[type=button], .submit-row input, a.button {
+        background: linear-gradient(135deg, #4361ee, #3a0ca3) !important;
+        border: none !important;
+        border-radius: 8px !important;
+        color: #ffffff !important;
+        font-weight: 600 !important;
+        padding: 10px 20px !important;
+        cursor: pointer !important;
+        transition: all 0.2s ease !important;
+        box-shadow: 0 4px 10px rgba(67, 97, 238, 0.2) !important;
+    }
+
+    .button:hover, input[type=submit]:hover, input[type=button]:hover, .submit-row input:hover, a.button:hover {
+        transform: translateY(-1px) !important;
+        box-shadow: 0 6px 15px rgba(67, 97, 238, 0.3) !important;
+    }
+
+    .button.default, input[type=submit].default, .submit-row input.default {
+        background: linear-gradient(135deg, #2a9d8f, #21867a) !important;
+        box-shadow: 0 4px 10px rgba(42, 157, 143, 0.2) !important;
+    }
+
+    .button.default:hover, input[type=submit].default:hover, .submit-row input.default:hover {
+        box-shadow: 0 6px 15px rgba(42, 157, 143, 0.3) !important;
+    }
+
+    /* Changelist table */
+    #changelist {
+        background: #ffffff !important;
+        border-radius: 12px !important;
+        box-shadow: none !important;
+    }
+
+    #changelist-filter {
+        background: #ffffff !important;
+        border-left: 1px solid #e5e7eb !important;
+        border-radius: 0 12px 12px 0 !important;
+    }
+
+    #changelist-filter h2 {
+        background: #f9fafb !important;
+        border-bottom: 1px solid #e5e7eb !important;
+        font-size: 0.9rem !important;
+    }
+
+    #changelist table thead th {
+        background: #f9fafb !important;
+        padding: 12px 10px !important;
+        color: #4b5563 !important;
+        font-weight: 600 !important;
+        font-size: 0.8rem !important;
+        text-transform: uppercase !important;
+        border-bottom: 2px solid #edf2f7 !important;
+    }
+
+    #changelist table tbody tr {
+        transition: background-color 0.2s ease !important;
+    }
+
+    #changelist table tbody tr:hover {
+        background-color: rgba(67, 97, 238, 0.03) !important;
+    }
+
+    #changelist table tbody td, #changelist table tbody th {
+        padding: 12px 10px !important;
+        border-bottom: 1px solid #f3f4f6 !important;
+    }
+
+    /* Forms styling */
+    input[type=text], input[type=password], input[type=email], input[type=url], input[type=number], textarea, select {
+        border: 1px solid #d1d5db !important;
+        border-radius: 8px !important;
+        padding: 10px 14px !important;
+        background-color: #f9fafb !important;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+    }
+
+    input[type=text]:focus, input[type=password]:focus, input[type=email]:focus, input[type=url]:focus, input[type=number]:focus, textarea:focus, select:focus {
+        background-color: #ffffff !important;
+        border-color: #4361ee !important;
+        box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1) !important;
+        outline: none !important;
+    }
+
+    .form-row {
+        border-bottom: 1px solid #f3f4f6 !important;
+        padding: 16px 20px !important;
+    }
+
+    /* Sidebar and User menu styling */
+    #user-tools {
+        font-size: 0.82rem !important;
+        font-weight: 500 !important;
+    }
+
+    #user-tools a {
+        background: rgba(255,255,255,0.1) !important;
+        padding: 6px 12px !important;
+        border-radius: 6px !important;
+        transition: background 0.2s ease !important;
+    }
+
+    #user-tools a:hover {
+        background: rgba(255,255,255,0.2) !important;
+        text-decoration: none !important;
+    }
+</style>
+{% endblock %}
